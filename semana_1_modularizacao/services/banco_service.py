@@ -89,3 +89,77 @@ Regras de arquitetura:
 Responsabilidade deste arquivo:
 Coordenar múltiplas contas do sistema.
 """
+from models.conta import Conta
+
+
+
+class  BancoService:
+    
+
+    def __init__(self):
+        self.__contas={}
+
+
+    
+    
+    def buscar_conta(self,numero):
+        if not isinstance(numero,int):
+            raise ValueError('Numero invalido')
+        
+        if numero<=0:
+            raise ValueError('Numero invalido')
+        
+        if self.__contas.get(numero):
+            return self.__contas[numero]
+        
+        return None
+    
+    @property
+    def contas(self):
+        return self.__contas.copy()
+    
+    
+    
+    def  criar_conta(self,conta):
+        if not isinstance(conta,Conta):
+            raise ValueError('Conta invalida')
+        
+        conta_existe=self.buscar_conta(conta.numero)
+        if conta_existe is not None:
+            raise ValueError('Conta ja cadastrada')
+        
+        self.__contas[conta.numero]=conta
+        return 'Conta cadastrada com sucesso'
+    
+    
+    
+    
+    
+    
+    
+    def  transferir(self,numero_origem,numero_destino,valor):
+            
+        
+        if not isinstance(valor,(int,float)):
+            raise ValueError('Valor invalido')
+        
+        
+        conta_origem=self.buscar_conta(numero_origem)
+        if conta_origem is None:
+            raise ValueError('Conta não encontrada')
+        
+        conta_destino=self.buscar_conta(numero_destino)
+        if conta_destino is None:
+            raise ValueError('Conta nao encontrada')
+        
+        conta_origem.sacar(valor)
+        conta_destino.depositar(valor)
+        return 'Transferencia efetuada com sucesso'
+    
+
+    def listar_contas(self):
+        lista=[]
+        for chave,valor in self.__contas.items():
+            lista.append({chave:valor})
+
+        return lista
