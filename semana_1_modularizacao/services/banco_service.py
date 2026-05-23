@@ -103,16 +103,10 @@ class  BancoService:
     
     
     def buscar_conta(self,numero):
-        if not isinstance(numero,int):
+        if not isinstance(numero,int) or numero<=0:
             raise ValueError('Numero invalido')
-        
-        if numero<=0:
-            raise ValueError('Numero invalido')
-        
-        if self.__contas.get(numero):
-            return self.__contas[numero]
-        
-        return None
+                
+        return self.__contas.get(numero)
     
     @property
     def contas(self):
@@ -129,7 +123,7 @@ class  BancoService:
             raise ValueError('Conta ja cadastrada')
         
         self.__contas[conta.numero]=conta
-        return 'Conta cadastrada com sucesso'
+        
     
     
     
@@ -138,15 +132,10 @@ class  BancoService:
     
     
     def  transferir(self,numero_origem,numero_destino,valor):
-            
-        
-        if not isinstance(valor,(int,float)):
-            raise ValueError('Valor invalido')
-        
-        
+                       
         conta_origem=self.buscar_conta(numero_origem)
         if conta_origem is None:
-            raise ValueError('Conta não encontrada')
+            raise ValueError('Conta nao encontrada')
         
         conta_destino=self.buscar_conta(numero_destino)
         if conta_destino is None:
@@ -154,12 +143,32 @@ class  BancoService:
         
         conta_origem.sacar(valor)
         conta_destino.depositar(valor)
-        return 'Transferencia efetuada com sucesso'
+        
     
 
     def listar_contas(self):
-        lista=[]
-        for chave,valor in self.__contas.items():
-            lista.append({chave:valor})
+        return list(self.__contas.values())
+    
 
-        return lista
+    def depositar_em_conta(self,numero,valor):
+        if not isinstance(numero,int) or numero<=0:
+            raise ValueError('Numero invalido')
+        
+        conta=self.buscar_conta(numero)
+        if conta is None:
+            raise ValueError('Conta nao encontrada')
+        
+        conta.depositar(valor)
+
+
+
+    
+    def sacar_em_conta(self,numero,valor):
+        if not isinstance(numero,int) or numero<=0:
+            raise ValueError('Numero invalido')
+        
+        conta=self.buscar_conta(numero)
+        if conta is None:
+            raise ValueError('Conta nao encontrada')
+        
+        conta.sacar(valor)
