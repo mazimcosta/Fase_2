@@ -108,11 +108,20 @@ class  BancoService:
                 
         return self.__contas.get(numero)
     
-    @property
-    def contas(self):
-        return self.__contas.copy()
     
     
+    def _buscar_conta_erro(self,numero):
+
+        conta=self.buscar_conta(numero)
+
+        if conta is None:
+            raise ValueError('Conta nao encontrada')
+        return conta
+
+
+
+    
+
     
     def  criar_conta(self,conta):
         if not isinstance(conta,Conta):
@@ -124,51 +133,40 @@ class  BancoService:
         
         self.__contas[conta.numero]=conta
         
-    
-    
-    
-    
-    
-    
+            
     
     def  transferir(self,numero_origem,numero_destino,valor):
-                       
-        conta_origem=self.buscar_conta(numero_origem)
-        if conta_origem is None:
-            raise ValueError('Conta nao encontrada')
-        
-        conta_destino=self.buscar_conta(numero_destino)
-        if conta_destino is None:
-            raise ValueError('Conta nao encontrada')
+
+        conta_origem=self.buscar_conta_erro(numero_origem)
+        conta_destino=self.buscar_conta_erro(numero_destino)
         
         conta_origem.sacar(valor)
         conta_destino.depositar(valor)
-        
     
 
     def listar_contas(self):
         return list(self.__contas.values())
     
 
-    def depositar_em_conta(self,numero,valor):
-        if not isinstance(numero,int) or numero<=0:
-            raise ValueError('Numero invalido')
-        
-        conta=self.buscar_conta(numero)
-        if conta is None:
-            raise ValueError('Conta nao encontrada')
+    def depositar(self,numero,valor):
+       
+        conta=self.buscar_conta_erro(numero)
         
         conta.depositar(valor)
 
 
 
     
-    def sacar_em_conta(self,numero,valor):
-        if not isinstance(numero,int) or numero<=0:
-            raise ValueError('Numero invalido')
+    def sacar(self,numero,valor):
         
-        conta=self.buscar_conta(numero)
-        if conta is None:
-            raise ValueError('Conta nao encontrada')
-        
+        conta=self.buscar_conta_erro(numero)
         conta.sacar(valor)
+
+
+    def remover_conta(self,numero):
+
+     self._buscar_conta_ou_erro(numero)
+     del self.__contas[numero]           
+        
+        
+        

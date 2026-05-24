@@ -207,3 +207,13 @@ Refatoração e limpeza arquitetural.
 
 Objetivo:
 deixar código mais limpo e mais profissional.
+
+### Semana 1 - Dia 4:
+Limpeza e redesign de BancoService
+Reduzi dupla validação e centralizei regra
+Eliminei varias validações com self.bucar_conta() indo para self.buscar_conta_erro()
+Construção de um main organizado com fluxo normal digno de profissional
+
+### Semana 1 - Dia 5:
+Refatoração completa do main.py com if __name__=='__main__'
+Estruturação do gitignore com arquivos que nao devem subir ao GitHub.
