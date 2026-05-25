@@ -123,22 +123,23 @@ class  BancoService:
     
 
     
-    def  criar_conta(self,conta):
-        if not isinstance(conta,Conta):
-            raise ValueError('Conta invalida')
-        
-        conta_existe=self.buscar_conta(conta.numero)
-        if conta_existe is not None:
-            raise ValueError('Conta ja cadastrada')
-        
-        self.__contas[conta.numero]=conta
-        
+    def criar_conta(self, conta):
+        if not isinstance(conta, Conta):
             
+            raise ValueError("Conta invalida")
+
+        conta_existe = self.buscar_conta(conta.numero)
+
+        if conta_existe is not None:
+            raise ValueError("Conta ja cadastrada")
+
+        self.__contas[conta.numero] = conta     
+        
     
     def  transferir(self,numero_origem,numero_destino,valor):
 
-        conta_origem=self.buscar_conta_erro(numero_origem)
-        conta_destino=self.buscar_conta_erro(numero_destino)
+        conta_origem=self._buscar_conta_erro(numero_origem)
+        conta_destino=self._buscar_conta_erro(numero_destino)
         
         conta_origem.sacar(valor)
         conta_destino.depositar(valor)
@@ -150,7 +151,7 @@ class  BancoService:
 
     def depositar(self,numero,valor):
        
-        conta=self.buscar_conta_erro(numero)
+        conta=self._buscar_conta_erro(numero)
         
         conta.depositar(valor)
 
@@ -159,14 +160,14 @@ class  BancoService:
     
     def sacar(self,numero,valor):
         
-        conta=self.buscar_conta_erro(numero)
+        conta=self._buscar_conta_erro(numero)
         conta.sacar(valor)
 
 
     def remover_conta(self,numero):
 
-     self._buscar_conta_ou_erro(numero)
-     del self.__contas[numero]           
-        
+            self._buscar_conta_erro(numero)
+            del self.__contas[numero]           
+                
         
         
