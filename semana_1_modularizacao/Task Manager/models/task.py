@@ -2,7 +2,7 @@
 
 class Task:
 
-    def  __init__(self,titulo,descricao):
+    def  __init__(self,titulo,descricao,status='pendente'):
 
         if not isinstance(titulo,str):
             raise ValueError('Titulo invalido')
@@ -20,9 +20,14 @@ class Task:
         if not descricao:
             raise ValueError('Descricao invalida')
 
+        if status not in ['pendente','concluida']:
+            raise ValueError('Status invalido')
+
+
+
         self.titulo=titulo
         self.descricao=descricao
-        self.__status='pendente'
+        self.__status=status
 
 
     @property

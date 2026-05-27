@@ -47,6 +47,7 @@ def teste_erros(banco,conta1,conta2,conta3,conta4):
         print(str(error))
 
     
+    
 
 
 

@@ -1,0 +1,12 @@
+[
+    {
+        "autor": "JRR Tolkien",
+        "titulo": "Senhor dos Aneis",
+        "status": "disponivel"
+    },
+    {
+        "autor": "Dostoievski",
+        "titulo": "O idiota",
+        "status": "disponivel"
+    }
+]

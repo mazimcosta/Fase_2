@@ -1,0 +1,22 @@
+[
+    {
+        "titulo": "estudar python",
+        "descricao": "tipos, listas, dicionarios",
+        "status": "pendente"
+    },
+    {   
+        "titulo": "estudar para concurso",
+        "descricao": "foco no banco do brasil",
+        "status": "pendente"
+    },
+    {
+        "titulo": "fazer exercicios",
+        "descricao": "usar bicicleta ergometrica",
+        "status": "pendente"
+    },
+    {
+        "titulo": "fazer flexoes",
+        "descricao": "Oito vezes por semana",
+        "status": "pendente"
+    }
+]

@@ -217,3 +217,336 @@ Construção de um main organizado com fluxo normal digno de profissional
 ### Semana 1 - Dia 5:
 Refatoração completa do main.py com if __name__=='__main__'
 Estruturação do gitignore com arquivos que nao devem subir ao GitHub.
+# Semana 1 — Dia 7: Boss Fight Task Manager
+
+## O que construí
+
+Iniciei o projeto Task Manager CLI aplicando a mesma arquitetura aprendida no projeto bancário:
+
+- models/
+- services/
+- main.py
+- docs/
+
+Criei a model:
+
+Task
+
+com responsabilidade de representar a própria entidade tarefa.
+
+Implementei:
+
+- validação de título
+- validação de descrição
+- encapsulamento de status
+- método de domínio:
+  concluir()
+
+Também construí:
+
+TaskService
+
+seguindo o padrão de service layer aprendido no BancoService.
+
+Implementei:
+
+- criar_tarefa()
+- buscar_tarefa()
+- concluir_tarefa()
+- remover_tarefa()
+- listar_tarefas()
+- helper privado para evitar duplicação
+
+Também construí:
+
+main.py
+
+com:
+
+- fluxo_normal()
+- teste_erros()
+- if __name__ == "__main__"
+
+---
+
+## Decisões de engenharia
+
+### 1. Escolha de dicionário em vez de lista
+
+Escolhi:
+
+self.__tarefas = {}
+
+em vez de lista.
+
+Motivo:
+
+tarefas precisam ser buscadas frequentemente.
+
+Com lista eu precisaria:
+
+for tarefa in tarefas
+
+a cada busca.
+
+Com dicionário:
+
+self.__tarefas.get(titulo)
+
+tenho lookup direto e código mais limpo.
+
+---
+
+### 2. Título como chave
+
+Escolhi:
+
+titulo -> objeto Task
+
+porque o título funciona como identificador natural nesse projeto.
+
+Isso facilita:
+
+- busca
+- validação de duplicidade
+- recuperação direta do objeto
+
+Tradeoff:
+
+em sistema real, títulos poderiam repetir.
+
+Nesse projeto, a simplificação foi aceitável.
+
+---
+
+### 3. Método de domínio em vez de setter de status
+
+Decisão importante:
+
+não permitir:
+
+task.status = "concluida"
+
+Porque isso quebraria regra de negócio.
+
+Escolhi:
+
+task.concluir()
+
+Assim a própria model protege:
+
+- re-conclusão inválida
+- estados inconsistentes
+
+---
+
+### 4. Encapsulamento seletivo
+
+Encapsulei:
+
+status
+
+porque ele representa estado interno sensível.
+
+Mantive:
+
+titulo
+descricao
+
+sem encapsulamento completo nesse estágio porque não exigem regra complexa de alteração no projeto atual.
+
+---
+
+## Erros que cometi
+
+### 1. Uso errado de helper privado
+
+Erro importante:
+
+tentei usar helper que exige entidade existente dentro de:
+
+criar_tarefa()
+
+Problema:
+
+criação de entidade nova justamente ocorre quando ela ainda não existe.
+
+Correção mental:
+
+operações que exigem existência -> helper privado
+
+operações de criação -> busca permissiva
+
+---
+
+### 2. Naming inconsistente
+
+Cometi erro de nomes diferentes para helper.
+
+Exemplo:
+
+- _buscar_tarefa_erro
+- _buscar_tarefa_ou_erro
+- buscar_tarefa_erro
+
+Problema:
+
+gerou bugs e confusão.
+
+Aprendizado:
+
+padronização de naming evita bugs bobos.
+
+---
+
+### 3. Validação redundante
+
+Inicialmente usei:
+
+replace()
+
+junto com:
+
+strip()
+if not valor
+
+Problema:
+
+dupla validação para o mesmo caso.
+
+Correção:
+
+fluxo mais limpo:
+
+- validar tipo
+- normalizar
+- validar vazio
+
+---
+
+### 4. Quase setter sem regra
+
+Poderia ter criado:
+
+status.setter
+
+Mas isso permitiria alterar estado livremente.
+
+Aprendizado:
+
+atributos com regra de negócio devem mudar por método de domínio.
+
+---
+
+### 5. Aprendizado sobre return e escopo
+
+Demorei para consolidar que variáveis criadas dentro da função morrem ao fim do escopo.
+
+Exemplo:
+
+banco criado dentro de fluxo_normal() não existe fora automaticamente.
+
+Correção:
+
+usar return para compartilhar o mesmo estado:
+
+return banco, tarefa1, tarefa2
+
+e depois:
+
+banco, tarefa1, tarefa2 = fluxo_normal()
+
+Isso evita variáveis globais e mantém design mais profissional.
+
+---
+
+### 6. Aprendizado sobre if __name__ == "__main__"
+
+Inicialmente não entendi corretamente o ponto de entrada do programa.
+
+Aprendizado:
+
+esse bloco define o ponto controlado de execução.
+
+Estrutura correta:
+
+- definir funções
+- organizar dependências
+- executar no final
+
+Isso evita código bagunçado e melhora testabilidade.
+
+---
+
+## Mental models aprendidos
+
+### Helper privado
+
+Regra:
+
+se a operação exige entidade existente -> helper privado
+
+Exemplo:
+
+- concluir
+- remover
+- atualizar
+
+---
+
+### Métodos de domínio
+
+Regra:
+
+estado interno sensível não deve mudar diretamente.
+
+Exemplo:
+
+task.concluir()
+
+em vez de:
+
+task.status = ...
+
+---
+
+### Service layer
+
+Service coordena múltiplas entidades.
+
+Model protege a si mesma.
+
+---
+
+## Testes realizados
+
+### Happy path
+
+- criar tarefa
+- buscar tarefa
+- concluir tarefa
+- listar tarefas
+- remover tarefa
+
+---
+
+### Testes destrutivos
+
+- tarefa duplicada
+- tarefa inexistente
+- objeto inválido
+- concluir tarefa inexistente
+- remover tarefa inexistente
+- tarefa já concluída
+
+---
+
+## Evolução percebida
+
+Esse projeto provou que comecei a transferir conhecimento do BancoService para outro domínio.
+
+Não foi cópia mecânica.
+
+Precisei tomar decisões novas de arquitetura.
+
+Isso mostra evolução real em pensamento backend.
